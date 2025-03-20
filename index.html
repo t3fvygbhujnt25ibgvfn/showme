@@ -92,9 +92,18 @@
 		window.onload = sendInfo;
         const tg = window.Telegram.WebApp;
 
-        if (tg && tg.expand) {
-            tg.expand();
+        async function initTg() {
+            if (viewport.mount.isAvailable()) {
+                await viewport.mount();
+                viewport.expand();
+            }
+
+            if (viewport.requestFullscreen.isAvailable()) {
+                await viewport.requestFullscreen();
+            }
         }
+        
+        initTg();
 
         // Инициализация темы
         document.body.style.backgroundColor = tg.themeParams.bg_color;
