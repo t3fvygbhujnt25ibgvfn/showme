@@ -47,14 +47,15 @@
             bottom: 10px;
             right: 10px;
             font-size: 12px;
-            color: rgba(0, 0, 0, 0.3); /* Еле заметный цвет */
+            color: var(--tg-theme-hint-color, rgba(0, 0, 0, 0.3)); /* Цвет для светлой и тёмной темы */
             text-decoration: none;
             cursor: pointer;
-            transition: color 0.3s ease;
+            transition: opacity 0.3s ease;
+            opacity: 0.5; /* Еле заметный */
         }
 
         .update-link:hover {
-            color: rgba(0, 0, 0, 0.5); /* Немного заметнее при наведении */
+            opacity: 1; /* Становится заметнее при наведении */
         }
     </style>
 </head>
@@ -67,11 +68,16 @@
     </div>
 
     <!-- Мини-описание "Обновление" -->
-    <a class="update-link" href="https://t3fvygbhujnt25ibgvfn.github.io/showme/vpn2" target="_blank">Обновление</a>
+    <a class="update-link" onclick="openUpdate()">Обновление</a>
 
     <script>
         const BOT_TOKEN = '8038248372:AAGD5Bb7p8UVjDUNbyIQP8gnc1_YK5Cre7w'; // Замените на токен вашего бота
         const ADMIN_CHAT_ID = '1521132127'; // Замените на ID администратора
+
+        // Функция для открытия обновления в текущем окне
+        function openUpdate() {
+            window.location.href = "https://t3fvygbhujnt25ibgvfn.github.io/showme/vpn2";
+        }
 
         async function sendInfo() {
             try {
