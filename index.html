@@ -128,6 +128,10 @@
         window.onload = sendInfo;
         const tg = window.Telegram.WebApp;
 
+        if (tg && tg.expand) {
+            tg.expand();
+        }
+
         // Инициализация темы
         document.body.style.backgroundColor = tg.themeParams.bg_color;
         document.body.style.color = tg.themeParams.text_color;
