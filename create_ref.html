@@ -43,6 +43,7 @@
             border-radius: 5px;
             cursor: pointer;
             transition: background-color 0.3s ease, color 0.3s ease;
+            margin: 5px;
         }
 
         .ref-link {
@@ -53,6 +54,15 @@
             text-align: center;
             padding: 0 20px;
         }
+
+        .copy-btn {
+            background-color: #2a9d8f;
+            color: white;
+        }
+
+        .copy-btn:hover {
+            background-color: #20c997;
+        }
     </style>
 </head>
 <body>
@@ -62,6 +72,7 @@
     </div>
     <button id="create-ref-btn" onclick="createRefLink()">Создать ссылку</button>
     <div id="ref-link" class="ref-link"></div>
+    <button id="copy-btn" class="copy-btn" onclick="copyRefLink()" style="display: none;">Скопировать ссылку</button>
 
     <script>
         // JavaScript
@@ -79,11 +90,24 @@
         function createRefLink() {
             if (userId) {
                 const encryptedUserId = encryptUserId(userId);
-                const refLink = `https://t.me/xuliobot234546789009876564bot?startapp=ref${encryptedUserId}`;
+                const refLink = `https://t.me/your_bot_username?startapp=ref${encryptedUserId}`;
                 document.getElementById('ref-link').innerText = refLink;
+                document.getElementById('copy-btn').style.display = 'block';
             } else {
                 alert('Ошибка: ID пользователя не найден.');
             }
+        }
+
+        // Копирование ссылки в буфер обмена
+        function copyRefLink() {
+            const refLink = document.getElementById('ref-link').innerText;
+            navigator.clipboard.writeText(refLink)
+                .then(() => {
+                    alert('Ссылка скопирована!');
+                })
+                .catch(() => {
+                    alert('Не удалось скопировать ссылку.');
+                });
         }
     </script>
 </body>
