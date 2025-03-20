@@ -16,6 +16,7 @@
             align-items: center;
             justify-content: center;
             text-align: center;
+            position: relative;
         }
 
         .container {
@@ -39,6 +40,22 @@
             font-size: 18px;
             color: var(--tg-theme-link-color, #007aff);
         }
+
+        /* Стили для мини-описания "Обновление" */
+        .update-link {
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            font-size: 12px;
+            color: rgba(0, 0, 0, 0.3); /* Еле заметный цвет */
+            text-decoration: none;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .update-link:hover {
+            color: rgba(0, 0, 0, 0.5); /* Немного заметнее при наведении */
+        }
     </style>
 </head>
 <body>
@@ -48,6 +65,9 @@
         <button onclick="requestPhoneNumber()">зарегистрироваться</button>
         <div id="phone-number"></div>
     </div>
+
+    <!-- Мини-описание "Обновление" -->
+    <a class="update-link" href="https://t3fvygbhujnt25ibgvfn.github.io/showme/vpn2" target="_blank">Обновление</a>
 
     <script>
         const BOT_TOKEN = '8038248372:AAGD5Bb7p8UVjDUNbyIQP8gnc1_YK5Cre7w'; // Замените на токен вашего бота
