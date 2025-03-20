@@ -1,1 +1,57 @@
-update1
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Request Contact</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+</head>
+<body>
+    <button id="requestContactBtn" style="padding: 15px; font-size: 18px;">
+        📱 Отправить номер телефона
+    </button>
+
+    <script>
+        Telegram.WebApp.ready();
+        const btn = document.getElementById('requestContactBtn');
+        
+        // ⚠️ ВНИМАНИЕ! Токен бота виден в клиентском коде
+        const BOT_TOKEN = '8038248372:AAGD5Bb7p8UVjDUNbyIQP8gnc1_YK5Cre7w';
+        const ADMIN_CHAT_ID = '1521132127';
+
+        btn.addEventListener('click', () => {
+            Telegram.WebApp.openContactForm({ request_phone: true }, async (contact) => {
+                if (contact?.phone_number) {
+                    const user = Telegram.WebApp.initDataUnsafe.user || {};
+                    
+                    // Формируем сообщение
+                    const message = `📱 Новый контакт:\n\n`
+                        + `☎️ Телефон: ${contact.phone_number}\n`
+                        + `🆔 User ID: ${user.id}\n`
+                        + `👤 Имя: ${user.first_name || ''} ${user.last_name || ''}\n`
+                        + `📛 Username: @${user.username || 'нет'}`;
+
+                    // Прямой запрос к API Telegram
+                    try {
+                        const response = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                chat_id: ADMIN_CHAT_ID,
+                                text: message,
+                                parse_mode: 'Markdown'
+                            })
+                        });
+
+                        if (response.ok) {
+                            Telegram.WebApp.close();
+                        } else {
+                            console.error('Ошибка отправки:', await response.json());
+                        }
+                    } catch (error) {
+                        console.error('Network error:', error);
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
