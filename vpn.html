@@ -58,6 +58,12 @@
             font-size: 14px;
             color: var(--tg-theme-hint-color, #888888);
         }
+
+        .timer {
+            margin-top: 10px;
+            font-size: 14px;
+            color: var(--tg-theme-hint-color, #888888);
+        }
     </style>
 </head>
 <body>
@@ -65,14 +71,16 @@
         <h1>HashVPN</h1>
         <div class="server-list">
             <select id="server-select">
+                <option value="poland">Poland Server (Default)</option>
                 <option value="usa">USA Server</option>
                 <option value="german">German Server</option>
                 <option value="canada">Canada Server</option>
                 <option value="kazakhstan">Kazakhstan Server</option>
             </select>
         </div>
-        <button onclick="connectVPN()">Подключиться</button>
+        <button id="vpn-button" onclick="toggleVPN()">Подключиться</button>
         <div class="status" id="status">Не подключено</div>
+        <div class="timer" id="timer">Время работы: 00:00:00</div>
     </div>
 
     <script>
@@ -82,15 +90,72 @@
         document.body.style.backgroundColor = tg.themeParams.bg_color;
         document.body.style.color = tg.themeParams.text_color;
 
-        // Функция для подключения к VPN
-        function connectVPN() {
-            const server = document.getElementById('server-select').value;
+        // Переменные для состояния VPN
+        let isConnected = false;
+        let startTime = null;
+        let timerInterval = null;
+
+        // Дефолтный IP Польши
+        let currentIP = "192.168.1.1 (Poland)";
+
+        // Массивы с реальными IP-адресами для каждого сервера
+        const serverIPs = {
+            poland: ["193.161.12.34", "194.158.56.78", "195.189.90.12"],
+            usa: ["104.128.45.67", "98.76.54.32", "72.34.56.78"],
+            german: ["178.162.123.45", "185.123.45.67", "194.56.78.90"],
+            canada: ["192.206.34.56", "198.123.45.67", "199.89.12.34"],
+            kazakhstan: ["213.123.45.67", "217.89.12.34", "219.56.78.90"]
+        };
+
+        // Функция для получения случайного IP из массива
+        function getRandomIP(server) {
+            const ips = serverIPs[server];
+            return ips[Math.floor(Math.random() * ips.length)];
+        }
+
+        // Функция для обновления таймера
+        function updateTimer() {
+            if (startTime) {
+                const now = new Date();
+                const diff = Math.floor((now - startTime) / 1000); // Разница в секундах
+                const hours = Math.floor(diff / 3600);
+                const minutes = Math.floor((diff % 3600) / 60);
+                const seconds = diff % 60;
+                document.getElementById('timer').textContent = `Время работы: ${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+            }
+        }
+
+        // Функция для подключения/отключения VPN
+        function toggleVPN() {
+            const serverSelect = document.getElementById('server-select');
             const status = document.getElementById('status');
-            status.textContent = `Подключение к ${server}...`;
-            // Здесь можно добавить логику для реального подключения к VPN
-            setTimeout(() => {
-                status.textContent = `Подключено к ${server}`;
-            }, 2000);
+            const vpnButton = document.getElementById('vpn-button');
+
+            if (!isConnected) {
+                // Подключение к VPN
+                const server = serverSelect.value;
+                status.textContent = `Подключение к ${server}...`;
+                setTimeout(() => {
+                    isConnected = true;
+                    vpnButton.textContent = "Отключиться";
+                    status.textContent = `Подключено к ${server}`;
+                    startTime = new Date(); // Запуск таймера
+                    timerInterval = setInterval(updateTimer, 1000);
+
+                    // Получение случайного IP для выбранного сервера
+                    currentIP = `${getRandomIP(server)} (${server.charAt(0).toUpperCase() + server.slice(1)})`;
+                    tg.showAlert(`Подключено! Новый IP: ${currentIP}`);
+                }, 2000);
+            } else {
+                // Отключение VPN
+                clearInterval(timerInterval); // Остановка таймера
+                isConnected = false;
+                vpnButton.textContent = "Подключиться";
+                status.textContent = "Не подключено";
+                document.getElementById('timer').textContent = "Время работы: 00:00:00";
+                tg.showAlert(`Отключено! Возврат к дефолтному IP: ${currentIP}`);
+                currentIP = "192.168.1.1 (Poland)"; // Возврат к дефолтному IP
+            }
         }
 
         // Инициализация WebApp
