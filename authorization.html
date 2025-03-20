@@ -65,6 +65,12 @@
         // JavaScript
         const tg = window.Telegram.WebApp;
 
+        // Проверяем, что бот запущен через Telegram
+        if (!tg.initDataUnsafe) {
+            alert('BOT_INVALID: Пожалуйста, откройте эту страницу через Telegram бота.');
+            window.location.href = 'https://t.me/your_bot_username'; // Перенаправляем в бота
+        }
+
         // Функция для дешифрования ID
         function decryptUserId(encryptedUserId) {
             return encryptedUserId / 3;
