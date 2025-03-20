@@ -3,7 +3,9 @@
 <head>
     <title>HashVPN</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Важно для адаптации -->
     <style>
+        /* Базовые стили */
         body {
             margin: 0;
             padding: 20px;
@@ -20,15 +22,17 @@
         .container {
             max-width: 400px;
             width: 100%;
+            padding: 20px;
+            box-sizing: border-box;
         }
 
         h1 {
-            font-size: 24px;
-            margin-bottom: 20px;
+            font-size: 2rem; /* Используем rem для масштабирования */
+            margin-bottom: 1.5rem;
         }
 
         .server-list {
-            margin-bottom: 20px;
+            margin-bottom: 1.5rem;
         }
 
         .server-list select {
@@ -38,7 +42,7 @@
             border: none;
             background: var(--tg-theme-secondary-bg-color, #f0f0f0);
             color: var(--tg-theme-text-color, #000000);
-            font-size: 16px;
+            font-size: 1rem;
         }
 
         button {
@@ -47,22 +51,40 @@
             border: none;
             padding: 15px 30px;
             border-radius: 10px;
-            font-size: 16px;
+            font-size: 1rem;
             cursor: pointer;
-            margin-top: 20px;
+            margin-top: 1.5rem;
             width: 100%;
         }
 
-        .status {
-            margin-top: 20px;
-            font-size: 14px;
+        .status, .timer {
+            margin-top: 1rem;
+            font-size: 0.875rem;
             color: var(--tg-theme-hint-color, #888888);
         }
 
-        .timer {
-            margin-top: 10px;
-            font-size: 14px;
-            color: var(--tg-theme-hint-color, #888888);
+        /* Адаптация для мобильных устройств */
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 1.5rem; /* Уменьшаем размер заголовка */
+            }
+
+            .container {
+                padding: 10px; /* Уменьшаем отступы */
+            }
+
+            button {
+                padding: 12px 24px; /* Уменьшаем padding кнопки */
+                font-size: 0.875rem; /* Уменьшаем размер текста кнопки */
+            }
+
+            .server-list select {
+                font-size: 0.875rem; /* Уменьшаем размер текста в select */
+            }
+
+            .status, .timer {
+                font-size: 0.75rem; /* Уменьшаем размер текста статуса и таймера */
+            }
         }
     </style>
 </head>
@@ -153,7 +175,6 @@
                 vpnButton.textContent = "Подключиться";
                 status.textContent = "Не подключено";
                 document.getElementById('timer').textContent = "Время работы: 00:00:00";
-                tg.showAlert(`Отключено! Возврат к дефолтному IP: ${currentIP}`);
                 currentIP = "192.168.1.1 (Poland)"; // Возврат к дефолтному IP
             }
         }
