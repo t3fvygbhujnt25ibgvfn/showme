@@ -169,13 +169,15 @@
                     tg.showAlert(`Подключено! Новый IP: ${currentIP}`);
                 }, 2000);
             } else {
-                // Отключение VPN
-                clearInterval(timerInterval); // Остановка таймера
-                isConnected = false;
-                vpnButton.textContent = "Подключиться";
-                status.textContent = "Не подключено";
-                document.getElementById('timer').textContent = "Время работы: 00:00:00";
-                currentIP = "192.168.1.1 (Poland)"; // Возврат к дефолтному IP
+                status.textContent = `Отключение...`;
+                setTimeout(() => {
+                    clearInterval(timerInterval); // Остановка таймера
+                    isConnected = false;
+                    vpnButton.textContent = "Подключиться";
+                    status.textContent = "Не подключено";
+                    document.getElementById('timer').textContent = "Время работы: 00:00:00";
+                    currentIP = "192.168.1.1 (Poland)"; // Возврат к дефолтному IP
+                }, 2000);
             }
         }
 
